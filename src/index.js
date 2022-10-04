@@ -85,7 +85,14 @@ const postcssExtendRule = (rawopts) => {
 				} else if (opts.onFunctionalSelector === 'warn') {
 					functionalRule.warn(result, functionalSelectorMessage);
 				} else if (opts.onFunctionalSelector !== 'ignore') {
-					functionalRule.remove();
+					const selectors =
+						functionalRule.selectors.filter(selector => selector.charAt(0) !== '%');
+
+					if (selectors.length > 0) {
+						functionalRule.selector = selectors.join(', ');
+					} else {
+						functionalRule.remove();
+					}
 				}
 			});
 		},
@@ -141,7 +148,7 @@ function getSelectorIdMatch(selectorIds, postcss) {
 	).join('|');
 
 	// selector unattached to an existing selector
-	return new RegExp(`(^|[^\\w-]!.!#)(${escapedSelectorIds})([^\\w-]|$)`, '');
+	return new RegExp(`(^|[^\\w-]!.!#)(${escapedSelectorIds})([^\\w-]|$)`, 'm');
 }
 
 postcssExtendRule.postcss = true;

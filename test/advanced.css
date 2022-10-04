@@ -2,6 +2,11 @@
 	border: thick dotted red;
 }
 
+.thin-border,
+%use-thin-border {
+	border: thin dotted red;
+}
+
 .serious-modal {
 	font-style: normal;
 	font-weight: bold;
@@ -21,4 +26,10 @@
 			outline: none;
 		}
 	}
+}
+
+.hint {
+	@extend %use-thin-border;
+
+	color: green;
 }
