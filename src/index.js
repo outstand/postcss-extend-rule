@@ -80,7 +80,7 @@ const postcssExtendRule = (rawopts) => {
 					.sync();
 
 				parent.replaceWith(cloneRoot);
-			})
+			});
 
 			root.walkRules(functionalSelectorMatch, functionalRule => {
 				// manage encountered functional selectors
