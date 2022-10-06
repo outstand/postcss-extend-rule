@@ -1,0 +1,23 @@
+.u-uppercase,
+%u-uppercase {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+%u-util {
+	letter-spacing: 1.5;
+}
+
+.u-p-tiny,
+%u-p-tiny {
+	@extend %u-util;
+  font: var(--type-pTiny);
+}
+
+a,
+label {
+	@extend %u-p-tiny;
+	@extend %u-uppercase;
+	display: block;
+	text-align: center;
+}

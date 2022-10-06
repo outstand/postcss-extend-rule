@@ -28,6 +28,9 @@ module.exports = {
 		message: 'supports mixed usage (with postcss-nesting)',
 		plugin: postcss(postcssNesting, postcssExtends)
 	},
+	'double-extend': {
+		message: 'supports multiple extends'
+	},
 	'nested-media': {
 		'message': 'supports nested @media usage'
 	},

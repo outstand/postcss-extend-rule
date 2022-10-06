@@ -17,6 +17,7 @@ const postcssExtendRule = (rawopts) => {
 		postcssPlugin: 'postcss-extend-rule',
 		OnceExit(root, { postcss, result }) {
 			const extendedAtRules = new WeakMap();
+			const parentsToProcess = new Set();
 
 			// for each extend at-rule
 			root.walkAtRules(extendMatch, extendAtRule => {
@@ -41,15 +42,8 @@ const postcssExtendRule = (rawopts) => {
 						// replace the extend at-rule with the extending rules
 						extendAtRule.replaceWith(extendingRules);
 
-						// transform any nesting at-rules
-						const cloneRoot = postcss.root().append(parent.clone());
-
-						// apply nesting (sync)
-						postcss([nesting({ noIsPseudoSelector: true })])
-							.process(cloneRoot)
-							.sync();
-
-						parent.replaceWith(cloneRoot);
+						// store parent to process with postcss-nesting later
+						parentsToProcess.add(parent);
 					} else {
 						// manage unused extend at-rules
 						const unusedExtendMessage = `Unused extend at-rule "${extendAtRule.params}"`;
@@ -75,6 +69,18 @@ const postcssExtendRule = (rawopts) => {
 					}
 				}
 			});
+
+			parentsToProcess.forEach((parent) => {
+				// transform any nesting at-rules
+				const cloneRoot = postcss.root().append(parent.clone());
+
+				// apply nesting (sync)
+				postcss([nesting({ noIsPseudoSelector: true })])
+					.process(cloneRoot)
+					.sync();
+
+				parent.replaceWith(cloneRoot);
+			})
 
 			root.walkRules(functionalSelectorMatch, functionalRule => {
 				// manage encountered functional selectors
